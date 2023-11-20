@@ -5,6 +5,7 @@ import GitHubProvider from "next-auth/providers/github";
 import { db } from "@/db";
 import { users } from "./db/schema";
 import { eq } from "drizzle-orm";
+import email from "next-auth/providers/email";
 
 export const config = {
   theme: {
@@ -19,6 +20,10 @@ export const config = {
     GitHubProvider({
       clientId: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    }),
+    email({
+      server: process.env.EMAIL_SERVER,
+      from: process.env.EMAIL_FROM,
     }),
   ],
   callbacks: {
