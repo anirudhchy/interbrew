@@ -6,6 +6,8 @@ import { db } from "@/db";
 import { users } from "./db/schema";
 import { eq } from "drizzle-orm";
 import email from "next-auth/providers/email";
+import getEmailHtml from "./emails/GetEmailHtml";
+import { createTransport } from "nodemailer";
 
 export const config = {
   theme: {
@@ -24,6 +26,30 @@ export const config = {
     email({
       server: process.env.EMAIL_SERVER,
       from: process.env.EMAIL_FROM,
+      sendVerificationRequest: async ({ identifier, url, provider }) => {
+        const user = await db.query.users.findFirst({
+          where: eq(users.email, identifier),
+        });
+
+        const emailHtml = getEmailHtml({
+          user,
+          url,
+        });
+        const transport = createTransport(provider.server);
+        const result = await transport.sendMail({
+          from: provider.from,
+          to: identifier,
+          subject: user?.emailVerified
+            ? "Sign in to Interbrew ✅"
+            : "Welcome to Interbrew 🥳",
+          html: emailHtml,
+        });
+
+        const failed = result.rejected.concat(result.pending).filter(Boolean);
+        if (failed.length) {
+          throw new Error(`Email(s) (${failed.join(", ")}) could not be sent`);
+        }
+      },
     }),
   ],
   callbacks: {
