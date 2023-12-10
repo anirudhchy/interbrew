@@ -1,1 +1,34 @@
-{"version":"5","dialect":"pg","entries":[{"idx":0,"version":"5","when":1702209640346,"tag":"0000_cooing_lifeguard","breakpoints":true},{"idx":1,"version":"5","when":1702210071152,"tag":"0001_blue_moon_knight","breakpoints":true}]}
+{
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1702209640346,
+      "tag": "0000_cooing_lifeguard",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1702210071152,
+      "tag": "0001_blue_moon_knight",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1702214554997,
+      "tag": "0002_right_kylun",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1702218053464,
+      "tag": "0003_nice_bishop",
+      "breakpoints": true
+    }
+  ]
+}

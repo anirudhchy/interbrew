@@ -1,0 +1,1 @@
+ALTER TABLE "questionnaire" ADD COLUMN "authorId" text;
