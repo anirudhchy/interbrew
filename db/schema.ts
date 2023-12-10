@@ -4,6 +4,8 @@ import {
   text,
   primaryKey,
   integer,
+  boolean,
+  pgEnum,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from "@auth/core/adapters";
 
@@ -13,6 +15,29 @@ export const users = pgTable("user", {
   email: text("email").notNull(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
+});
+
+// enum describing the stratergy of each test
+export const stratergyEnum = pgEnum("stratergyEnum", [
+  "perQuestion",
+  "transcript",
+]);
+
+export const questionnaires = pgTable("questionnaire", {
+  id: text("id").notNull().primaryKey(),
+  // name of the questionnaire
+  name: text("name").notNull(),
+  // description of the questionnaire
+  description: text("description"),
+  // restricted ? access allowed only to specific email id's ?
+  restricted: boolean("restricted").default(false),
+  // access-allowed email id's
+  allowedEmails: text("allowedEmails").array(),
+  stratergy: stratergyEnum("stratergy"),
+  // is timer required for each question ?
+  isTimed: boolean("isTimed").default(false),
+  // timer time in seconds
+  timer: integer("timer"),
 });
 
 export const accounts = pgTable(
@@ -33,7 +58,9 @@ export const accounts = pgTable(
     session_state: text("session_state"),
   },
   (account) => ({
-    compoundKey: primaryKey(account.provider, account.providerAccountId),
+    compoundKey: primaryKey({
+      columns: [account.provider, account.providerAccountId],
+    }),
   })
 );
 
@@ -53,8 +80,8 @@ export const verificationTokens = pgTable(
     expires: timestamp("expires", { mode: "date" }).notNull(),
   },
   (vt) => ({
-    compoundKey: primaryKey(vt.identifier, vt.token),
+    compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
   })
 );
 
-export type user = typeof users.$inferSelect;
+// export type user = typeof users.$inferSelect;
